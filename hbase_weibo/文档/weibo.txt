@@ -1,0 +1,86 @@
+*微博数据hbase存储设计
+
+ 1.用例设计
+  应用场景实例，列出每个应用场景下的：人、事、物
+  1.注册账号：
+	人：用户，
+	事：注册，
+	物：无
+  2.发微博：
+	人：用户，
+	事：微博发表，
+	物：博文
+  3.浏览微博：
+	人：用户、关注的用户，
+	事：看微博，
+	物：博文
+  4.点赞和评论微博：
+	人：用户、其他用户，
+	事：对微博的各种操作，
+	物：博文
+  5.关注和取关：
+	人：用户、其他用户，
+	事：关注或取消关注，
+	物：无
+  6.分享：
+	人：用户，
+	事：分享，
+	物：博文
+  7.删除微博：
+	人：用户，
+	事：删除，
+	物：博文
+
+  在设计中，人和物一般都要单独设计成数据模型表，而“事”则根据其重要性来决定要不要把一个“事”单独设计成一张表
+ 2.抽象模型
+  用户
+  博文
+
+  对微博的各种操作
+  用户关注信息表
+ 3.细化模型
+  powerdesigner
+  er图工具
+  
+
+  用户：id user_id
+        姓名 name
+        性别 gender
+        年龄 age
+        手机号 tel
+        账号名 user_name
+        密码 password
+        头像 protrait
+        注册时间 regist_time
+  博文：id weibo_id
+        用户id user_id
+        发表时间 push_time
+        标题 title
+        内容 content
+        删除时间 delete_time
+        【点赞数】like_num
+        【评论数】comment_num
+        【查看数】look_num
+  对微博的各种操作： id weibo_oper_id
+                     用户id user_id
+                     博文id weibo_id
+                     类型 op_type
+                     评论内容 comment_content
+                     操作时间 operator_time
+                     状态 op_status
+
+  用户关注信息表：id user_connnection_id
+                  操作用户id user_id
+                  被操作用户id o_user_id
+                  关注时间 connection_time
+                  状态 connection_status
+
+  sequence
+
+完成用例功能：
+  1.注册账号 保存人员信息
+  2.登录，根据账号查找人员信息
+  3.关注，知道操作人的userid和被操作人的userid
+                需要保存的数据由两条
+  4.查询某人关注的其他人的信息，接受一个userid
+  5.查询某人被谁关注，接收一个userid
